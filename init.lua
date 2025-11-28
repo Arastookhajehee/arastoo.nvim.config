@@ -249,6 +249,13 @@ require("lazy").setup({
 	-- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
 	"NMAC427/guess-indent.nvim", -- Detect tabstop and shiftwidth automatically
 
+	{
+		"windwp/nvim-ts-autotag",
+		config = function()
+			require("nvim-ts-autotag").setup({})
+		end,
+	},
+
 	-- NOTE: Plugins can also be added by using a table,
 	-- with the first argument being the link and the following
 	-- keys can be used to configure plugin behavior/loading/etc.
@@ -710,6 +717,34 @@ require("lazy").setup({
 					},
 				},
 
+				pyright = {
+					cmd = {
+						"pyright-langserver",
+						"--stdio",
+					},
+
+					filetypes = { "py", "pyw", "python" },
+
+					root_markers = {
+						"pyrightconfig.json",
+						"pyproject.toml",
+						"setup.py",
+						"setup.cfg",
+						"requirements.txt",
+						"Pipfile",
+						".git",
+					},
+
+					settings = {
+						python = {
+							analysis = {
+								autoSearchPaths = true,
+								diagnosticMode = "openFilesOnly",
+								useLibraryCodeForTypes = true,
+							},
+						},
+					},
+				},
 				omnisharp = {
 					cmd = {
 						"omnisharp",
@@ -754,6 +789,41 @@ require("lazy").setup({
 
 						Sdk = {
 							IncludePrereleases = true,
+						},
+					},
+				},
+				vtsls = {
+					cmd = { "vtsls", "--stdio" },
+					filetypes = {
+						"javascript",
+						"javascriptreact",
+						"javascript.jsx",
+						"typescript",
+						"typescriptreact",
+						"typescript.tsx",
+					},
+					init_options = {
+						hostInfo = "neovim",
+					},
+					settings = {
+						vtsls = {
+							autoUseWorkspaceTsdk = true,
+							completeFunctionCalls = true,
+							tsserver = {
+								maxTsServerMemory = 4096,
+							},
+						},
+						typescript = {
+							updateImportsOnFileMove = { enabled = "always" },
+							suggest = {
+								completeFunctionCalls = true,
+							},
+						},
+						javascript = {
+							updateImportsOnFileMove = { enabled = "always" },
+							suggest = {
+								completeFunctionCalls = true,
+							},
 						},
 					},
 				},
@@ -894,8 +964,9 @@ require("lazy").setup({
 				-- <c-k>: Toggle signature help
 				--
 				-- See :h blink-cmp-config-keymap for defining your own keymap
-				preset = "default",
+				-- preset = "default",
 
+				preset = "super-tab",
 				-- For more advanced Luasnip keymaps (e.g. selecting choice nodes, expansion) see:
 				--    https://github.com/L3MON4D3/LuaSnip?tab=readme-ov-file#keymaps
 			},
@@ -1131,3 +1202,10 @@ vim.keymap.set("n", "n", "nzzzv")
 vim.keymap.set("n", "N", "Nzzzv")
 vim.keymap.set("n", "=ap", "ma=ap'a")
 vim.keymap.set("n", "<leader>zig", "<cmd>LspRestart<cr>")
+
+-- Accept LSP suggestion with Tab if popup is visible
+vim.keymap.set("i", "<Tab>", function()
+	return vim.fn.pumvisible() == 1 and "<C-y>" or "<Tab>"
+end, { expr = true })
+
+vim.keymap.set("i", "jj", "<Esc>")

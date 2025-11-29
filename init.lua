@@ -1209,3 +1209,5 @@ vim.keymap.set("i", "<Tab>", function()
 end, { expr = true })
 
 vim.keymap.set("i", "jj", "<Esc>")
+
+vim.keymap.set("n", "<leader>G", ':!git add . && git commit -m "quick commit" && git push origin')

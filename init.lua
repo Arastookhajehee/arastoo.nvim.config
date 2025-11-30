@@ -1210,4 +1210,12 @@ end, { expr = true })
 
 vim.keymap.set("i", "jj", "<Esc>")
 
-vim.keymap.set("n", "<leader>G", ':!git add . && git commit -m "quick commit" && git push origin')
+vim.keymap.set("n", "<leader>G", function()
+	local default_msg = "qc"
+	local msg = vim.fn.input("Commit message: ", default_msg)
+	if msg ~= "" then
+		vim.cmd('!git add . && git commit -m "' .. msg .. '" && git push')
+	else
+		print("Commit cancelled (empty message)")
+	end
+end, { desc = "Git add + commit + push" })
